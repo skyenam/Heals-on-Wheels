@@ -42,16 +42,16 @@ python heals_on_wheels.py
 
 - **Dayoung (Skye) Nam** - University of Toronto Computer Engineering
 
-- **James Kim** - University of Toronto Biomedical Engineering  
+- **James Kim** - University of Toronto Electrical Engineering
   
-- **Nicholas Carbones**  University of Toronto Rotman Commerce
+- **Nicholas Carbones**  University of Toronto Computer Engineering
 
-- **Richard Tan**  University of Toronto Piano
+- **Richard Tan**  University of Toronto Computer Engineering
 
-- **Jung Ho Ham**  University of Toronto Computer Science
+- **Jung Ho Ham**  University of Toronto Electrical Engineering
 
-- **Ryan Zhu**  University of Toronto Gender Studies
+- **Ryan Zhu**  University of Toronto Computer Engineering
 
-- **Christine Lee**  University of Toronto Electrical Engineering
+- **Christine Lee**  University of Toronto Biomedical Systems Engineering
 
-- **Joon Park**  University of British Columbia Sauder School of Business
+- **Joon Park**  University of Toronto Electrical Engineering
