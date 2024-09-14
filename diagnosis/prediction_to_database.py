@@ -118,7 +118,7 @@ def data_ripper(symptom_list):
     
     return prediction
 
-def check_disease_symptoms_2(input_symptoms, input_disease):
+def check_disease_symptoms(input_symptoms, input_disease):
 
     df = pd.read_csv("dataset.csv") # until line 2461
 
@@ -195,7 +195,7 @@ symptom_input = ["skin_rash", "nodal_skin_eruptions", "itching"]
 predicted_disease = data_ripper(symptom_input)
 print(f"The predicted disease is: {predicted_disease}")
 
-validated_disease = check_disease_symptoms_2(symptom_input, predicted_disease)
+validated_disease = check_disease_symptoms(symptom_input, predicted_disease)
 predicted_medicine = predict_med(validated_disease)
 
 save_prediction(symptom_input, validated_disease)
