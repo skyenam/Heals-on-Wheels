@@ -11,38 +11,6 @@ import warnings
 
 warnings.simplefilter("ignore")
 
-# Initialize the symptom list
-df_symp_list = ['itching', 'skin_rash', 'nodal_skin_eruptions', 'dischromic _patches', 'continuous_sneezing',
-                'shivering', 'chills', 'watering_from_eyes', 'stomach_pain',
-                'acidity', 'ulcers_on_tongue', 'vomiting', 'cough', 'chest_pain', 'yellowish_skin', 'nausea',
-                'loss_of_appetite', 'abdominal_pain', 'yellowing_of_eyes',
-                'burning_micturition', 'spotting_ urination', 'passage_of_gases', 'internal_itching', 'indigestion',
-                'muscle_wasting', 'patches_in_throat', 'high_fever',
-                'extra_marital_contacts', 'fatigue', 'weight_loss', 'restlessness', 'lethargy', 'irregular_sugar_level',
-                'blurred_and_distorted_vision', 'obesity',
-                'excessive_hunger', 'increased_appetite', 'polyuria', 'sunken_eyes', 'dehydration', 'diarrhoea',
-                'breathlessness', 'family_history', 'mucoid_sputum',
-                'headache', 'dizziness', 'loss_of_balance', 'lack_of_concentration', 'stiff_neck', 'depression',
-                'irritability', 'visual_disturbances', 'back_pain',
-                'weakness_in_limbs', 'neck_pain', 'weakness_of_one_body_side', 'altered_sensorium', 'dark_urine',
-                'sweating', 'muscle_pain', 'mild_fever', 'swelled_lymph_nodes',
-                'malaise', 'red_spots_over_body', 'joint_pain', 'pain_behind_the_eyes', 'constipation',
-                'toxic_look_(typhos)', 'belly_pain', 'yellow_urine', 'receiving_blood_transfusion',
-                'receiving_unsterile_injections', 'coma', 'stomach_bleeding', 'acute_liver_failure',
-                'swelling_of_stomach', 'distention_of_abdomen', 'history_of_alcohol_consumption',
-                'fluid_overload', 'phlegm', 'blood_in_sputum', 'throat_irritation', 'redness_of_eyes', 'sinus_pressure',
-                'runny_nose', 'congestion', 'loss_of_smell', 'fast_heart_rate',
-                'rusty_sputum', 'pain_during_bowel_movements', 'pain_in_anal_region', 'bloody_stool',
-                'irritation_in_anus', 'cramps', 'bruising', 'swollen_legs', 'swollen_blood_vessels',
-                'prominent_veins_on_calf', 'weight_gain', 'cold_hands_and_feets', 'mood_swings', 'puffy_face_and_eyes',
-                'enlarged_thyroid', 'brittle_nails', 'swollen_extremeties',
-                'abnormal_menstruation', 'muscle_weakness', 'anxiety', 'slurred_speech', 'palpitations',
-                'drying_and_tingling_lips', 'knee_pain', 'hip_joint_pain', 'swelling_joints',
-                'painful_walking', 'movement_stiffness', 'spinning_movements', 'unsteadiness', 'pus_filled_pimples',
-                'blackheads', 'scurring', 'bladder_discomfort', 'foul_smell_of urine',
-                'continuous_feel_of_urine', 'skin_peeling', 'silver_like_dusting', 'small_dents_in_nails',
-                'inflammatory_nails', 'blister', 'red_sore_around_nose', 'yellow_crust_ooze']
-
 # Path to SQLite database
 db_path = "symptom_predictions.db"
 
@@ -121,11 +89,11 @@ def data_ripper(symptom_list):
     y_train = train["Disease"].copy()
 
     rnd_forest = RandomForestClassifier(
-                                        n_estimators=500,
-                                        criterion='gini',
-                                        #max_depth=30,
-                                        min_samples_split=2, #10 after 2
-                                        min_samples_leaf=1, #4 after 1
+                                        n_estimators=200,
+                                        #criterion='gini',
+                                        max_depth=30,
+                                        #min_samples_split=10, #10 after 2
+                                        #min_samples_leaf=4, #4 after 1
                                         max_features='sqrt', # was 'sqrt'
                                         bootstrap=True,
                                         #random_state=42
@@ -140,22 +108,64 @@ def data_ripper(symptom_list):
 
     feature_importances = rnd_forest.feature_importances_
     important_features = pd.Series(feature_importances, index=X_train.columns).sort_values(ascending=False)
-    print(important_features)
+    #print(important_features)
 
     scores = cross_val_score(rnd_forest, X_train, y_train, cv=5)
-    print(f"Cross-validated accuracy: {scores.mean() * 100:.2f}%")
+    #print(f"Cross-validated accuracy: {scores.mean() * 100:.2f}%")
 
     prediction = rnd_forest.predict(input_vector)[0]
-    save_prediction(symptom_list, prediction)
+    #save_prediction(symptom_list, prediction)
     
     return prediction
+
+def check_disease_symptoms_2(input_symptoms, input_disease):
+
+    df = pd.read_csv("dataset.csv") # until line 2461
+
+    df_new = pd.read_csv("dataset.csv")
+    symptom_columns = [col for col in df_new.columns if "Symptom" in col]
+    df_new["Symptoms"] = df_new[symptom_columns].apply(lambda row: [symptom for symptom in row if pd.notna(symptom)], axis=1)
+
+
+    collected_symptoms = []
+    
+    # Loop through rows where the disease matches input_disease
+    for _, row in df[df['Disease'] == input_disease].iterrows():
+        # Extract symptoms from the row and append non-NaN, non-duplicate symptoms to the list
+        for symptom in row[['Symptom_1', 'Symptom_2', 'Symptom_3', 'Symptom_4',
+                            'Symptom_5', 'Symptom_6', 'Symptom_7', 'Symptom_8',
+                            'Symptom_9', 'Symptom_10', 'Symptom_11', 'Symptom_12',
+                            'Symptom_13', 'Symptom_14', 'Symptom_15', 'Symptom_16', 'Symptom_17']]:
+            if pd.notna(symptom) and symptom not in collected_symptoms:
+                collected_symptoms.append(symptom)
+    print(collected_symptoms)
+
+    # Check if the input symptoms match the disease symptoms
+    if set(input_symptoms).issubset(set(collected_symptoms)):
+        print(f"The symptoms match the disease {input_disease}.")
+        return input_disease
+        #return f"The symptoms match the disease {input_disease}."
+    else:
+        # If the symptoms don't match, find the most similar disease based on symptoms
+        df_new['symptom_match'] = df_new['Symptoms'].apply(lambda symps: len(set(symps).intersection(set(input_symptoms))))
+        
+        # Find the disease with the highest number of matching symptoms
+        best_match = df_new.loc[df_new['symptom_match'].idxmax()]
+        best_match_disease = best_match['Disease']
+
+        print(f"The symptoms do not match the disease {input_disease}. The closest match is {best_match_disease}.")
+        return best_match_disease
+        #return f"The symptoms do not match the disease {input_disease}. The closest match is {best_match_disease}."
+
+
 
 def predict_med(dis):
     import pandas as pd
     import warnings
 
     warnings.simplefilter("ignore")
-    df = pd.read_csv("Warehouse_Data/dataset.csv")
+    #df = pd.read_csv("Warehouse_Data/dataset.csv")
+    df = pd.read_csv("dataset.csv")
     disease = df["Disease"].unique()
     disease_meds = {"Disease": disease}
     disease_meds = pd.DataFrame(disease_meds)
@@ -169,9 +179,25 @@ def predict_med(dis):
     disease_meds["Medicine"] = medicines
     return disease_meds[disease_meds["Disease"] == dis]["Medicine"].item()
 
-# Example of using the function
-predicted_disease = data_ripper(["skin_rash", "nodal_skin_eruptions", "itching"]) #fungus infection
-#predicted_disease = data_ripper(["muscle_weakness", "swelling_joints", "movement_stiffness"]) #arthritis
+# Symptom list examples for the model
+symptom_input = ["skin_rash", "nodal_skin_eruptions", "itching"]
+#symptom_input = ["constipation", "pain_during_bowel_movements", "pain_in_anal_region"]
+#symptom_input = ["skin_rash", "nodal_skin_eruptions", "itching"]
+#symptom_input = ["chills", "vomiting", "fatigue"]
+#symptom_input = ["patches_in_throat", "high_fever", "extra_marital_contacts"]
+#symptom_input = ["red_spots_over_body", "high_fever", "headache"]
+#symptom_input = ["constipation", "abdominal_pain", "diarrhoea", "toxic_look_(typhos)"]
+#symptom_input = ["vomiting", "yellowish_skin", "dark_urine", "nausea"]
+#symptom_input = ["breathlessness", "sweating", "fainting"]
+#symptom_input = ["bruising", "swollen_legs", "swollen_blood_vessels", "prominent_veins_on_calf"]
+#symptom_input = ["sweating", "diarrhoea", "fast_heart_rate", "excessive_hunger", "muscle_weakness"]
+
+predicted_disease = data_ripper(symptom_input)
 print(f"The predicted disease is: {predicted_disease}")
-predicted_medicine = predict_med(predicted_disease)
+
+validated_disease = check_disease_symptoms_2(symptom_input, predicted_disease)
+predicted_medicine = predict_med(validated_disease)
+
+save_prediction(symptom_input, validated_disease)
+
 print(f"Medicine recommendation: {predicted_medicine}")
