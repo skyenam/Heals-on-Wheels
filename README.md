@@ -42,7 +42,7 @@ python heals_on_wheels.py
 
 - **Dayoung (Skye) Nam** - University of Toronto Computer Engineering
 
-- **James Kim** - University of Toronto Electrical Engineering
+- **James Kim** - University of Toronto Electrical Engineering 
   
 - **Nicholas Carbones**  University of Toronto Computer Engineering
 
