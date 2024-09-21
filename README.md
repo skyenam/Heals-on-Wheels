@@ -44,14 +44,14 @@ python heals_on_wheels.py
 
 - **James Kim** - University of Toronto Electrical Engineering 
   
-- **Nicholas Carbones**  University of Toronto Computer Engineering
+- **Nicholas Carbones** - University of Toronto Computer Engineering
 
-- **Richard Tan**  University of Toronto Computer Engineering
+- **Richard Tan** - University of Toronto Computer Engineering
 
-- **Jung Ho Ham**  University of Toronto Electrical Engineering
+- **Jung Ho Ham** - University of Toronto Electrical Engineering
 
-- **Ryan Zhu**  University of Toronto Computer Engineering
+- **Ryan Zhu** - University of Toronto Computer Engineering
 
-- **Christine Lee**  University of Toronto Biomedical Systems Engineering
+- **Christine Lee** - University of Toronto Biomedical Systems Engineering
 
-- **Joon Park**  University of Toronto Electrical Engineering
+- **Joon Park** - University of Toronto Electrical Engineering
